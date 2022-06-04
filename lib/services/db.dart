@@ -60,12 +60,12 @@ class NotesDatabaseService {
   Future<NotesModel> addNoteInDB(NotesModel newNote) async {
     final db = await database;
     if (newNote.title.trim().isEmpty) newNote.title = 'Untitled Note';
-    // int id = await db.transaction((transaction) async {
-    //   transaction.rawInsert(
-    //       'INSERT into Notes(title, content, date, isImportant) VALUES ("${newNote.title}", "${newNote.content}", "${newNote.date.toIso8601String()}", ${newNote.isImportant == true ? 1 : 0});');
-    // });
-    int id = await db.rawInsert(
-        'INSERT into Notes(title, content, date, isImportant) VALUES ("${newNote.title}", "${newNote.content}", "${newNote.date.toIso8601String()}", ${newNote.isImportant == true ? 1 : 0});');
+    dynamic id = await db.transaction((transaction) async {
+      transaction.rawInsert(
+          'INSERT into Notes(title, content, date, isImportant) VALUES ("${newNote.title}", "${newNote.content}", "${newNote.date.toIso8601String()}", ${newNote.isImportant == true ? 1 : 0});');
+    });
+    // int id = await db.rawInsert(
+    //     'INSERT into Notes(title, content, date, isImportant) VALUES ("${newNote.title}", "${newNote.content}", "${newNote.date.toIso8601String()}", ${newNote.isImportant == true ? 1 : 0});');
     newNote.id = id;
     print('Note added: ${newNote.title} ${newNote.content}');
     return newNote;
